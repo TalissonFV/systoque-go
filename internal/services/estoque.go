@@ -19,7 +19,7 @@ func NewEstoque() *Estoque {
 	}
 }
 
-func (e *Estoque) AdicionarItem(item models.Item) error {
+func (e *Estoque) AdicionarItem(item models.Item, user string) error {
 	if item.Quantidade <= 0 {
 		return fmt.Errorf("a quantidade do item deve ser maior que zero")
 	}
@@ -30,14 +30,15 @@ func (e *Estoque) AdicionarItem(item models.Item) error {
 	}
 
 	e.items[strconv.Itoa(item.ID)] = item
-	log := models.Log{
+
+	e.logs = append(e.logs, models.Log{
 		Timestamp:  time.Now(),
-		Acao:       "Adicionado",
+		Acao:       "Item adicionado ao estoque",
+		User:       user,
 		ItemID:     item.ID,
 		Quantidade: item.Quantidade,
-		Razao:      "Item adicionado ao estoque",
-	}
-	e.logs = append(e.logs, log)
+		Razao:      "Adicionando novo produto ao estoque",
+	})
 	return nil
 }
 
